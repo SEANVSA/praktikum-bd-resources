@@ -84,7 +84,11 @@ public class LoginController {
                     app.getPrimaryStage().setScene(scene);
                 } else {
                     // Load the user view
-                    app.getHostServices().showDocument("user-view.fxml");
+                    app.getPrimaryStage().setTitle("User View");
+
+                    FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("user-view.fxml"));
+                    Scene scene = new Scene(loader.load());
+                    app.getPrimaryStage().setScene(scene);
                 }
             } else {
                 // Show an error message
