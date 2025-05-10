@@ -63,7 +63,7 @@
                         <Button mnemonicParsing="false" onAction="#onShowGradesClick" text="Show Grades" />
                         <HBox HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#onTestButtonClick" text="Test" />
-                        <Button mnemonicParsing="false" onAction="#onSaveClick" text="Submit" />
+                        <Button mnemonicParsing="false" onAction="#onSubmitClick" text="Submit" />
                     </children>
                 </HBox>
             </children>

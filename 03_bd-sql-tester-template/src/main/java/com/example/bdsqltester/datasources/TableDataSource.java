@@ -1,18 +1,16 @@
 package com.example.bdsqltester.datasources;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
-public class GradingDataSource {
+public class TableDataSource {
 
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
 
     static {
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/hr");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/kerja");
         config.setUsername("postgres");
         config.setPassword("postgres");
         config.addDataSourceProperty("cachePrepStmts", "true");
@@ -25,6 +23,6 @@ public class GradingDataSource {
         return ds.getConnection();
     }
 
-    private GradingDataSource() {
+    private TableDataSource() {
     }
 }
