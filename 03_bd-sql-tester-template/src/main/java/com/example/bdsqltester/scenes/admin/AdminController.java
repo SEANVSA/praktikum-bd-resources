@@ -2,6 +2,7 @@ package com.example.bdsqltester.scenes.admin;
 
 import com.example.bdsqltester.datasources.GradingDataSource;
 import com.example.bdsqltester.datasources.MainDataSource;
+import com.example.bdsqltester.datasources.TableDataSource;
 import com.example.bdsqltester.dtos.Assignment;
 import com.example.bdsqltester.scenes.LoginController;
 import javafx.beans.property.SimpleStringProperty;
@@ -219,7 +220,7 @@ public class AdminController{
         ArrayList<String> headers = new ArrayList<>(); // To check if any columns were returned
 
         // Use try-with-resources for automatic closing of Connection, Statement, ResultSet
-        try (Connection conn = GradingDataSource.getConnection();
+        try (Connection conn = TableDataSource.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(answerKeyField.getText())) {
 

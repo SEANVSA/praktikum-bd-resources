@@ -251,7 +251,8 @@ public class UserController{
             alert.showAndWait();
         }
         else {
-            //show grade
+
+
 
         }
     }
@@ -271,7 +272,7 @@ public class UserController{
         ArrayList<String> headers = new ArrayList<>(); // To check if any columns were returned
 
         // Use try-with-resources for automatic closing of Connection, Statement, ResultSet
-        try (Connection conn = GradingDataSource.getConnection();
+        try (Connection conn = TableDataSource.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(answerKeyField.getText())) {
 
