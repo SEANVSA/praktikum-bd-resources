@@ -4,6 +4,7 @@ import com.example.bdsqltester.datasources.GradingDataSource;
 import com.example.bdsqltester.datasources.MainDataSource;
 import com.example.bdsqltester.datasources.TableDataSource;
 import com.example.bdsqltester.dtos.Assignment;
+import com.example.bdsqltester.scenes.LoginController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +18,7 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class UserController {
+public class UserController{
 
     //static connection biar ga crash klo terlalu sering di pencet
 
@@ -25,6 +26,14 @@ public class UserController {
     Connection t = TableDataSource.getConnection();
     Connection c = MainDataSource.getConnection();
 
+    private String username;
+
+    public void setUser(String username){
+        this.username = username;
+    }
+    
+    @FXML
+    private Label scoreField;
 
     @FXML
     private TextArea answerKeyField;
@@ -52,6 +61,12 @@ public class UserController {
         idField.setEditable(false);
         idField.setMouseTransparent(true);
         idField.setFocusTraversable(false);
+
+        nameField.setEditable(false);
+        nameField.setMouseTransparent(true);
+        nameField.setFocusTraversable(false);
+
+        instructionsField.setEditable(false);
 
 
         // Populate the ListView with assignment names
@@ -129,7 +144,9 @@ public class UserController {
         instructionsField.setText(assignment.instructions);
 
         // Set the answer key field
-        answerKeyField.setText(assignment.answerKey);
+        answerKeyField.setText("");
+
+        scoreField.setText("");
     }
 
 
@@ -166,7 +183,6 @@ public class UserController {
                 //bandingin row dan kolom
                 try {
                     if (ts.getRow() == js.getRow() && tsmeta.getColumnCount() == jsmeta.getColumnCount()) {
-                        System.out.println("Tersambung");
                         ts.beforeFirst();
                         js.beforeFirst();
                         boolean urut = true;
@@ -175,7 +191,6 @@ public class UserController {
                             while (ts.next()) {
                                 boolean sama = true;
                                 for (int i = 1; i <= jsmeta.getColumnCount(); i++) {
-                                    System.out.println(ts.getString(i)+" "+js.getString(i));
                                     if (!ts.getString(i).equals(js.getString(i))) {
                                         sama = false;
                                         urut = false;
@@ -191,17 +206,30 @@ public class UserController {
                                 ts.beforeFirst();
                             }
                             if (!berhasil){
-                                throw new RuntimeException();
+                                break;
                             }
                         }
-                        if (urut) System.out.println("Nilai mu 100");
-                        else System.out.println("50");
+                        if (urut){
+                            scoreField.setText("100");
+                        }
+                        else scoreField.setText("50");
                     } else {
                         throw new RuntimeException();
                     }
                 }catch (RuntimeException e){
-                    System.out.println("Nilai mu 0");
+                    scoreField.setText("0");
                 }
+                stmt = c.prepareStatement(
+                        "INSERT INTO grades (assignment_id, user_id, grade) " +
+                                "VALUES (?, (SELECT id FROM users WHERE username = ? AND role = ?), ?)"
+                );
+
+                stmt.setInt(1, Integer.parseInt(idField.getText()));
+                stmt.setString(2, username );
+                stmt.setString(3, "user");
+                stmt.setInt(4, Integer.parseInt(scoreField.getText()));
+
+                stmt.executeUpdate();
 
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -221,7 +249,10 @@ public class UserController {
             alert.setHeaderText("No Assignment Selected");
             alert.setContentText("Please select an assignment to view grades.");
             alert.showAndWait();
-            return;
+        }
+        else {
+            //show grade
+
         }
     }
 

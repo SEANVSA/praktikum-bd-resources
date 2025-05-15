@@ -3,6 +3,7 @@ package com.example.bdsqltester.scenes.admin;
 import com.example.bdsqltester.datasources.GradingDataSource;
 import com.example.bdsqltester.datasources.MainDataSource;
 import com.example.bdsqltester.dtos.Assignment;
+import com.example.bdsqltester.scenes.LoginController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +17,7 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class AdminController {
+public class AdminController{
 
     @FXML
     private TextArea answerKeyField;
@@ -173,6 +174,20 @@ public class AdminController {
         }
 
         // Refresh the assignment list
+        refreshAssignmentList();
+    }
+    @FXML
+    void onDeleteClick(){
+        try (Connection c = MainDataSource.getConnection()) {
+            PreparedStatement stmt = c.prepareStatement("DELETE FROM assignments WHERE id = ?");
+            stmt.setInt(1, Integer.parseInt(idField.getText()));
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Database Error");
+            alert.setContentText(e.toString());
+        }
         refreshAssignmentList();
     }
 
